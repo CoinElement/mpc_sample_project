@@ -45,6 +45,8 @@ func CreateServer() *http.Server {
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 
+	r.GET("/start", mpcController.HandleStart)
+	r.GET("/ping", mpcController.HandlePing)
 	r.POST("/commit", mpcController.HandleCommitment)         // 接收commitment
 	r.POST("/result", mpcController.HandleCommitment)         // 接收上一家的 result 或 party_k 的 noise
 	r.POST("/notification", mpcController.HandleNotification) // 接收参与计算的请求
