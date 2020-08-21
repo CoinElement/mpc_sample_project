@@ -118,7 +118,7 @@ func (mc *MpcController) HandleCommitment(c *gin.Context) {
 		return
 	}
 
-	err := services.ReceiveCommitment(commitment.InstanceId, c.ClientIP())
+	err := services.ReceiveCommitment(commitment.InstanceId, c.ClientIP(), mc.ms.DB)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{
@@ -149,7 +149,7 @@ func (mc *MpcController) HandleResult(c *gin.Context) {
 		return
 	}
 
-	err := services.ReceiveResult(result.InstanceId, c.ClientIP(), result.Data)
+	err := services.ReceiveResult(result.InstanceId, c.ClientIP(), result.Data, mc.ms.DB)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{
