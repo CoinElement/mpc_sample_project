@@ -2,17 +2,23 @@ package server
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"mpc_sample_project/controllers"
+	"mpc_sample_project/models"
 	"mpc_sample_project/services"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 )
 
 func CreateServer() *http.Server {
+
+	/*
+	 configure Logger
+	*/
 	log := logrus.New()
 	log.Out = os.Stdout
 	log.Level = logrus.DebugLevel
@@ -29,6 +35,23 @@ func CreateServer() *http.Server {
 		log.Fatal("failed to open file")
 	} else {
 		log.Out = logfile
+		log.Formatter = &logrus.JSONFormatter{}
+	}
+
+	/*
+	 configure Database
+	*/
+	db_type, exists := os.LookupEnv("DB_TYPE")
+	if !exists {
+		log.Fatal("missing DB_TYPE environment variable")
+	}
+	db_path, exists := os.LookupEnv("DB_PATH")
+	if !exists {
+		log.Fatal("missing DB_PATH environment variable")
+	}
+	db := models.NewDB(db_type, db_path)
+	if err := db.Connect(); err != nil {
+		log.Fatal("db connection failed")
 	}
 
 	ADDR_PORT, exists := os.LookupEnv("ADDR_PORT")
@@ -37,10 +60,19 @@ func CreateServer() *http.Server {
 		ADDR_PORT = "8080"
 	}
 
+	/*
+		Initialize Services
+	*/
 	ms := services.NewMpcService(log)
 
+	/*
+		Initialize Controllers
+	*/
 	mpcController := controllers.NewMpcController(log, ms)
 
+	/*
+		Initialize gin
+	*/
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(CORSMiddleware())
@@ -51,6 +83,10 @@ func CreateServer() *http.Server {
 	r.POST("/result", mpcController.HandleCommitment)         // 接收上一家的 result 或 party_k 的 noise
 	r.POST("/notification", mpcController.HandleNotification) // 接收参与计算的请求
 
+	/*
+		Start HTTP Server
+	*/
+	// initialize server
 	addr := fmt.Sprintf("%s:%s", "0.0.0.0", ADDR_PORT)
 	server := makeServer(addr, r)
 
