@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"mpc_sample_project/services"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type MpcController struct {
@@ -14,7 +15,7 @@ type MpcController struct {
 
 func NewMpcController(log *logrus.Logger, ms *services.MpcService) *MpcController {
 	return &MpcController{
-		log: log.WithField("controller", "match"),
+		log: log.WithField("controller", "mpc"),
 		ms:  ms,
 	}
 }
@@ -118,7 +119,7 @@ func (mc *MpcController) HandleCommitment(c *gin.Context) {
 		return
 	}
 
-	err := services.ReceiveCommitment(commitment.InstanceId, c.ClientIP(), mc.ms.DB)
+	err := services.ReceiveCommitment(commitment.InstanceId, c.ClientIP(), mc.ms.db)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{
@@ -149,7 +150,7 @@ func (mc *MpcController) HandleResult(c *gin.Context) {
 		return
 	}
 
-	err := services.ReceiveResult(result.InstanceId, c.ClientIP(), result.Data, mc.ms.DB)
+	err := services.ReceiveResult(result.InstanceId, c.ClientIP(), result.Data, mc.ms.db)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{

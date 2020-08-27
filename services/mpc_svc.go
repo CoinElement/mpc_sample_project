@@ -1,18 +1,20 @@
 package services
 
 import (
-	"github.com/sirupsen/logrus"
 	"mpc_sample_project/models"
+
+	"github.com/sirupsen/logrus"
 )
 
 type MpcService struct {
 	log *logrus.Entry
-	DB  *models.DB
+	db  *models.DB
 }
 
-func NewMpcService(log *logrus.Logger) *MpcService {
+func NewMpcService(log *logrus.Logger, db *models.DB) *MpcService {
 	return &MpcService{
-		log: log.WithField("services", "Mpc"),
+		log: log.WithField("services", "mpc"),
+		db:  db,
 	}
 }
 
