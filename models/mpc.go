@@ -1,9 +1,10 @@
 package models
 
 type Mpc struct {
-	InstanceId string `gorm:"primary_key"`
-	IpAddress  string `gorm:"primary_key"`
-	Committed  bool
+	InstanceId string `json:"instanceId" gorm:"primary_key"`
+	IpAddress  string `json:"ipAddress" gorm:"primary_key"`
+	Status     string `json:"status"`  //    Pending\Ready\Not
+	
 }
 
 func (db DB) CreateMpcs(mpcs []Mpc) error {
@@ -12,7 +13,7 @@ func (db DB) CreateMpcs(mpcs []Mpc) error {
 
 func (db DB) GetUncommittedIps(instanceId string) ([]Mpc, error) {
 	mpcs := make([]Mpc, 0)
-	err := db.DB.Where("committed = ? AND instance_id = ?", false, instanceId).Find(&mpcs).Error
+	err := db.DB.Where("status = ? AND instance_id = ?", false, instanceId).Find(&mpcs).Error
 	if err != nil {
 		return nil, err
 	}
@@ -28,6 +29,6 @@ func (db DB) GetInfoByInstanceId(instanceId string) ([]Mpc, error) {
 	return mpcs, nil
 }
 
-func (db DB) SetCommitment(instanceId, ipAddress string, committed bool) error {
-	return db.DB.Model(Mpc{}).Where("instance_id = ? AND ip_address = ?", instanceId, ipAddress).Update("committed", committed).Error
+func (db DB) SetCommitment(instanceId, ipAddress,status string) error {
+	return db.DB.Model(Mpc{}).Where("instance_id = ? AND ip_address = ?", instanceId, ipAddress).Update("status", status).Error
 }

@@ -30,6 +30,8 @@ func (mc *MpcController) HandlePing(c *gin.Context) {
 	)
 }
 
+type 
+
 type FormNotification struct {
 	InstanceId  string `json:"instance_id"`
 	PrevAddress string `json:"prev_address"`

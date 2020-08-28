@@ -3,6 +3,7 @@ package services
 import (
 	"mpc_sample_project/models"
 
+	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,8 +19,25 @@ func NewMpcService(log *logrus.Logger, db *models.DB) *MpcService {
 	}
 }
 
-func Start() error {
+func (ms *MpcService) Start() error {
 	// 开始
+	uuid4 := uuid.NewV4().String()    //获取instanceId的唯一值
+	config, err := models.GetConfig() //获取ipAddresses
+	if err != nil {
+		ms.log.Error("failed to get config")
+		return err
+	}
+
+	var mpcs []models.Mpc
+	for _, ip := range config.IPAddress {
+		mpcs = append(mpcs, models.Mpc{InstanceId: uuid4, IpAddress: ip, Status: "Pending"})
+	}
+
+	if err := ms.db.CreateMpcs(mpcs); err != nil {
+		ms.log.Error("failed to create Mpcs")
+		return err
+	}
+
 	return nil
 }
 
