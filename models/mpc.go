@@ -3,7 +3,7 @@ package models
 type Mpc struct {
 	InstanceId string `gorm:"primary_key"`
 	IpAddress  string `gorm:"primary_key"`
-	Committed  bool
+	Status     string // INVITED | ACCEPTED| REFUSED
 }
 
 func (db DB) CreateMpcs(mpcs []Mpc) error {
