@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	Data      int      `yaml:"data"`
+	Data      int64    `yaml:"data"`
 	IPAddress []string `yaml:"ip_addresses"`
+	Secret    string   `yaml:"secret"`
 }
 
 func GetConfig() (*Config, error) {

@@ -62,12 +62,9 @@ func (mc *MpcController) HandleNotification(c *gin.Context) {
 		return
 	}
 
-	err := services.ReceiveNotification(
-		notification.InstanceId,
+	err := mc.ms.ReceiveNotification(
 		c.ClientIP(),
-		notification.Coefficient,
-		notification.PrevAddress,
-		notification.NextAddress,
+		notification,
 	)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
@@ -99,7 +96,7 @@ func (mc *MpcController) HandleCommitment(c *gin.Context) {
 		return
 	}
 
-	err := services.ReceiveCommitment(commitment.InstanceId, c.ClientIP(), mc.ms.DB)
+	err := mc.ms.ReceiveCommitment(c.ClientIP(), commitment)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{
@@ -130,7 +127,7 @@ func (mc *MpcController) HandleResult(c *gin.Context) {
 		return
 	}
 
-	err := services.ReceiveResult(result.InstanceId, c.ClientIP(), result.Data, mc.ms.DB)
+	err := mc.ms.ReceiveResult(c.ClientIP(), result)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{

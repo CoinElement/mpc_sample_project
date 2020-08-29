@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"mpc_sample_project/controllers"
+	"mpc_sample_project/models"
 	"mpc_sample_project/services"
 	"net/http"
 	"os"
@@ -18,8 +19,10 @@ func CreateServer() *http.Server {
 	log.Level = logrus.DebugLevel
 
 	if err := godotenv.Load(); err != nil {
+		fmt.Println(err.Error())
 		log.Fatal(err.Error())
 	}
+
 	LOG_FILE_LOCATION, exists := os.LookupEnv("LOG_FILE_LOCATION")
 	if !exists {
 		log.Fatal("missing LOG_FILE_LOCATION")
@@ -36,8 +39,21 @@ func CreateServer() *http.Server {
 		log.Fatal("missing ADDR_PORT")
 		ADDR_PORT = "8080"
 	}
+	log.Info("listening on port: " + ADDR_PORT)
 
-	ms := services.NewMpcService(log)
+	DB_TYPE, exists := os.LookupEnv("DB_TYPE")
+	if !exists {
+		log.Fatal("missing DB_TYPE")
+	}
+	DB_PATH, exists := os.LookupEnv("DB_PATH")
+	if !exists {
+		log.Fatal("missing DB_PATH")
+	}
+	db := models.NewDB(DB_TYPE, DB_PATH)
+	if err := db.Connect(); err != nil {
+		log.Fatal("db connection failed" + err.Error())
+	}
+	ms := services.NewMpcService(log, db)
 
 	mpcController := controllers.NewMpcController(log, ms)
 
