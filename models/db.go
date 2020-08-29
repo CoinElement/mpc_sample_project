@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
+	"github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -29,6 +30,8 @@ func (db *DB) Connect() error {
 		dbConnection, err = gorm.Open(sqlite.Open(db.dbConnectionPath), &gorm.Config{})
 	} else if db.dbType == "postgres" {
 		dbConnection, err = gorm.Open(postgres.Open(db.dbConnectionPath), &gorm.Config{})
+	} else if db.dbType == "mysql" {
+		dbConnection, err = gorm.Open(mysql.Open(db.dbConnectionPath), &gorm.Config{})
 	} else {
 		err = errors.New("invalid dbtype")
 	}
