@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"mpc_sample_project/models"
 	"mpc_sample_project/services"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type MpcController struct {
@@ -34,6 +35,7 @@ func (mc *MpcController) HandleStart(c *gin.Context) {
 	mc.log.Info("starting")
 	err := mc.ms.Start()
 	if err != nil {
+		mc.log.Error("failed to handle start")
 		c.JSON(http.StatusInternalServerError,
 			gin.H{
 				"msg":   "error",
@@ -53,6 +55,7 @@ func (mc *MpcController) HandleNotification(c *gin.Context) {
 	notification := models.FormNotification{}
 	mc.log.Debug("From IP:" + c.ClientIP())
 	if err := c.ShouldBindJSON(&notification); err != nil {
+		mc.log.Error("failed to bind json of notification")
 		c.JSON(http.StatusBadRequest,
 			gin.H{
 				"msg":   "failure",
@@ -67,6 +70,7 @@ func (mc *MpcController) HandleNotification(c *gin.Context) {
 		notification,
 	)
 	if err != nil {
+		mc.log.Error("failed to receive notification")
 		c.JSON(http.StatusInternalServerError,
 			gin.H{
 				"msg":   "error",
@@ -87,6 +91,7 @@ func (mc *MpcController) HandleCommitment(c *gin.Context) {
 	commitment := models.FormCommitment{}
 	mc.log.Debug("FromIP: " + c.ClientIP())
 	if err := c.ShouldBindJSON(&commitment); err != nil {
+		mc.log.Error("failed to bind json of commitment")
 		c.JSON(http.StatusBadRequest,
 			gin.H{
 				"msg":   "failure",
@@ -98,6 +103,7 @@ func (mc *MpcController) HandleCommitment(c *gin.Context) {
 
 	err := mc.ms.ReceiveCommitment(c.ClientIP(), commitment)
 	if err != nil {
+		mc.log.Error("failed to receive commitment")
 		c.JSON(http.StatusInternalServerError,
 			gin.H{
 				"msg":   "error",
@@ -118,6 +124,7 @@ func (mc *MpcController) HandleResult(c *gin.Context) {
 	result := models.FormResult{}
 	mc.log.Debug("From IP: " + c.ClientIP())
 	if err := c.ShouldBindJSON(&result); err != nil {
+		mc.log.Error("failed to bind json of result")
 		c.JSON(http.StatusBadRequest,
 			gin.H{
 				"msg":   "failure",
@@ -129,6 +136,7 @@ func (mc *MpcController) HandleResult(c *gin.Context) {
 
 	err := mc.ms.ReceiveResult(c.ClientIP(), result)
 	if err != nil {
+		mc.log.Error("failed to receive result")
 		c.JSON(http.StatusInternalServerError,
 			gin.H{
 				"msg":   "error",
