@@ -44,13 +44,33 @@ func (ms *MpcService) Start() error {
 			IpAddress:  address,
 			Status:     "INVITED",
 		})
-		notification := models.FormNotification{
+		notification := models.FormNotification{}
+		if index == 0 { //第一个
+			notification.InstanceId = instance_id
+			notification.PrevAddress = config.SelfIp
+			notification.Coefficient = index * 2
+			notification.NextAddress = config.IPAddress[index+1]
+			notification.SequenceId = index
+		} else if index == len(config.IPAddress)-1 { //最后一个
+			notification.InstanceId = instance_id
+			notification.PrevAddress = config.IPAddress[index-1]
+			notification.Coefficient = index * 2
+			notification.NextAddress = config.SelfIp
+			notification.SequenceId = index
+		} else {
+			notification.InstanceId = instance_id
+			notification.PrevAddress = config.IPAddress[index-1]
+			notification.Coefficient = index * 2
+			notification.NextAddress = config.IPAddress[index+1]
+			notification.SequenceId = index
+		}
+		/*notification := models.FormNotification{
 			InstanceId:  instance_id,
 			PrevAddress: config.IPAddress[index-1],
 			Coefficient: index * 2,
 			NextAddress: config.IPAddress[index+1],
 			SequenceId:  index,
-		}
+		}*/
 		ms.log.Debug(notification)
 		err := models.PostNotification(address, notification)
 		if err != nil {

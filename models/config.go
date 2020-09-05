@@ -10,6 +10,7 @@ type Config struct {
 	Data      int64    `yaml:"data"`
 	IPAddress []string `yaml:"ip_addresses"`
 	Secret    string   `yaml:"secret"`
+	SelfIp    string   `yaml:"self_ip"`
 }
 
 func GetConfig() (*Config, error) {

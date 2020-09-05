@@ -2,9 +2,9 @@ package models
 
 // 发起请求的 IP 列表 R/W
 type Client struct {
-	ID         uint
+	//ID         uint   `gorm:"AUTO_INCREMENT"`
 	InstanceId string `gorm:"primaryKey"`
-	SequenceId int
+	SequenceId int    `gorm:"primaryKey"`
 	IpAddress  string // 暂不考虑 ip unreachable
 	Status     string // INVITED | ACCEPTED| REFUSED
 }
