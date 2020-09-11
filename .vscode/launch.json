@@ -5,13 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
+            "name": "LaunchGo",
             "type": "go",
             "request": "launch",
             "mode": "auto",
+            "remotePath": "",
             "program": "${fileDirname}",
-            "env": {},
-            "args": []
+            "env": {
+                "GOPATH": "D:/MyData/codes/GoPath",
+                "GOROOT": "C:/Go"
+            },
+            "args": [],
+            //"showLog": true
         }
     ]
 }

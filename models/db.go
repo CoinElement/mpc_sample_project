@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -31,14 +30,14 @@ func (db *DB) Connect() error {
 	} else if db.dbType == "postgres" {
 		dbConnection, err = gorm.Open(postgres.Open(db.dbConnectionPath), &gorm.Config{})
 	} else if db.dbType == "mysql" {
-		dbConnection, err = gorm.Open(mysql.Open(db.dbConnectionPath), &gorm.Config{})
+		//dbConnection, err = gorm.Open(mysql.Open(db.dbConnectionPath), &gorm.Config{})
 	} else {
 		err = errors.New("invalid dbtype")
 	}
 	if err != nil {
 		return fmt.Errorf("failed to initialize database, got error: %v", err)
 	}
-	/*if err := dbConnection.AutoMigrate(&Client{}); err != nil {
+	if err := dbConnection.AutoMigrate(&Client{}); err != nil {
 		return err
 	}
 	if err := dbConnection.AutoMigrate(&Mpc{}); err != nil {
@@ -46,7 +45,7 @@ func (db *DB) Connect() error {
 	}
 	if err := dbConnection.AutoMigrate(&Instance{}); err != nil {
 		return err
-	}*/
+	}
 	//dbConnection.LogMode(true)
 	db.DB = dbConnection
 	return err

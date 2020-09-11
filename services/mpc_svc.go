@@ -36,6 +36,7 @@ func (ms *MpcService) Start() error {
 	mpc := models.Mpc{
 		InstanceId:  instance_id,
 		NextAddress: "NULL",
+		Coefficient: 10,
 		Status:      "PENDING",
 	}
 
@@ -43,7 +44,6 @@ func (ms *MpcService) Start() error {
 
 		mpc.SequenceId = index + 1
 		mpc.PrevAddress = address
-		mpc.Coefficient = mpc.SequenceId * 2
 		if index == 0 {
 			firstIp = address
 		}
@@ -58,19 +58,19 @@ func (ms *MpcService) Start() error {
 		if index == 0 { //第一个
 			notification.InstanceId = instance_id
 			notification.PrevAddress = config.SelfIp
-			notification.Coefficient = index * 2
+			notification.Coefficient = 10
 			notification.NextAddress = config.IPAddress[index+1]
 			notification.SequenceId = index
 		} else if index == len(config.IPAddress)-1 { //最后一个
 			notification.InstanceId = instance_id
 			notification.PrevAddress = config.IPAddress[index-1]
-			notification.Coefficient = index * 2
+			notification.Coefficient = 10
 			notification.NextAddress = config.SelfIp
 			notification.SequenceId = index
 		} else {
 			notification.InstanceId = instance_id
 			notification.PrevAddress = config.IPAddress[index-1]
-			notification.Coefficient = index * 2
+			notification.Coefficient = 10
 			notification.NextAddress = config.IPAddress[index+1]
 			notification.SequenceId = index
 		}
@@ -137,7 +137,7 @@ func (ms *MpcService) ReceiveNotification(clientIp string, notification models.F
 		Status:      "PENDING",
 	}
 
-	if err := models.CreateMpcs(mpc); err != nil {
+	if err := ms.db.CreateMpcs(mpc); err != nil {
 		ms.log.Error("failed to insert new information into mpc")
 		return err
 	}

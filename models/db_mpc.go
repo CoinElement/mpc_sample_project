@@ -4,7 +4,7 @@ package models
 type Mpc struct {
 	ID             uint64
 	InstanceId     string `gorm:"primary_key"`
-	SequenceId     int64    `gorm:"primaryKey;autoIncrement:false"`
+	SequenceId     int    `gorm:"primary_key;autoIncrement:false"`
 	PrevAddress    string
 	NextAddress    string
 	ReceivedData   string
