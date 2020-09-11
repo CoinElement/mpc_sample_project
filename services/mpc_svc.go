@@ -33,7 +33,17 @@ func (ms *MpcService) Start() error {
 	}
 	var clients []models.Client
 	var firstIp string
+	mpc := models.Mpc{
+		InstanceId:  instance_id,
+		NextAddress: "NULL",
+		Status:      "PENDING",
+	}
+
 	for index, address := range config.IPAddress {
+
+		mpc.SequenceId = index + 1
+		mpc.PrevAddress = address
+		mpc.Coefficient = mpc.SequenceId * 2
 		if index == 0 {
 			firstIp = address
 		}
@@ -64,13 +74,7 @@ func (ms *MpcService) Start() error {
 			notification.NextAddress = config.IPAddress[index+1]
 			notification.SequenceId = index
 		}
-		/*notification := models.FormNotification{
-			InstanceId:  instance_id,
-			PrevAddress: config.IPAddress[index-1],
-			Coefficient: index * 2,
-			NextAddress: config.IPAddress[index+1],
-			SequenceId:  index,
-		}*/
+
 		ms.log.Debug(notification)
 		err := models.PostNotification(address, notification)
 		if err != nil {
@@ -84,16 +88,20 @@ func (ms *MpcService) Start() error {
 		return err
 	}
 	//向instance数据库插入一条新数据
-	instance := make([]models.Instance, 0)
-	instance = append(instance, models.Instance{
+	instance := models.Instance{
 		InstanceId: instance_id,
 		FirstIp:    firstIp,
 		Function:   "prevResult+coefficient*data",
 		Status:     "PENDING",
 		StartTime:  time.Now(),
-	})
+	}
 	if err := ms.db.CreateInstances(instance); err != nil {
 		ms.log.Error("failed to insert new information into instance")
+		return err
+	}
+	//向mpc数据库插入一条新数据
+	if err := ms.db.CreateMpcs(mpc); err != nil {
+		ms.log.Error("failed to insert new information into mpc")
 		return err
 	}
 
@@ -117,6 +125,20 @@ func (ms *MpcService) ReceiveNotification(clientIp string, notification models.F
 	}
 	if err := models.PostCommitment(clientIp, commitment); err != nil {
 		ms.log.Error("failed to post commitment")
+		return err
+	}
+
+	mpc := models.Mpc{
+		InstanceId:  notification.InstanceId,
+		SequenceId:  notification.SequenceId,
+		PrevAddress: notification.PrevAddress,
+		NextAddress: notification.NextAddress,
+		Coefficient: notification.Coefficient,
+		Status:      "PENDING",
+	}
+
+	if err := models.CreateMpcs(mpc); err != nil {
+		ms.log.Error("failed to insert new information into mpc")
 		return err
 	}
 	return nil

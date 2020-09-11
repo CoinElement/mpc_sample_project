@@ -38,7 +38,7 @@ func (db *DB) Connect() error {
 	if err != nil {
 		return fmt.Errorf("failed to initialize database, got error: %v", err)
 	}
-	if err := dbConnection.AutoMigrate(&Client{}); err != nil {
+	/*if err := dbConnection.AutoMigrate(&Client{}); err != nil {
 		return err
 	}
 	if err := dbConnection.AutoMigrate(&Mpc{}); err != nil {
@@ -46,7 +46,7 @@ func (db *DB) Connect() error {
 	}
 	if err := dbConnection.AutoMigrate(&Instance{}); err != nil {
 		return err
-	}
+	}*/
 	//dbConnection.LogMode(true)
 	db.DB = dbConnection
 	return err

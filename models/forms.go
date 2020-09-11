@@ -11,21 +11,21 @@ import (
 type FormNotification struct {
 	InstanceId  string `json:"instance_id"`
 	PrevAddress string `json:"prev_address"`
-	SequenceId  int    `json:"sequence_id"`
-	Coefficient int    `json:"coefficient"`
+	SequenceId  int64  `json:"sequence_id"`
+	Coefficient int64  `json:"coefficient"`
 	NextAddress string `json:"next_address"`
 }
 
 type FormCommitment struct {
 	InstanceId string `json:"instance_id"`
 	Ready      bool   `json:"ready"`
-	SequenceId int    `json:"sequence_id"`
+	SequenceId int64  `json:"sequence_id"`
 	Secret     string `json:"secret"`
 }
 
 type FormResult struct {
 	InstanceId     string `json:"instance_id"` // 感觉其实没有必要，作为身份验证的辅助依据？
-	FromSequenceId int    `json:"from_sequence_id"`
+	FromSequenceId int64  `json:"from_sequence_id"`
 	Data           int64  `json:"data"` // 上一家的 result 或者自己是第一家时的 noise
 }
 

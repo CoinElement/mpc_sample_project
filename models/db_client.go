@@ -4,7 +4,7 @@ package models
 type Client struct {
 	//ID         uint   `gorm:"AUTO_INCREMENT"`
 	InstanceId string `gorm:"primaryKey"`
-	SequenceId int    `gorm:"primaryKey"`
+	SequenceId int64    `gorm:"primaryKey"`
 	IpAddress  string // 暂不考虑 ip unreachable
 	Status     string // INVITED | ACCEPTED| REFUSED
 }

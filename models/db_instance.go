@@ -13,7 +13,7 @@ type Instance struct {
 	StartTime   time.Time
 }
 
-func (db *DB) CreateInstances(instance []Instance) error {
+func (db *DB) CreateInstances(instance Instance) error {
 	return db.DB.Create(instance).Error
 }
 
