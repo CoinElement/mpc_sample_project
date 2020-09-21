@@ -33,7 +33,6 @@ func (ms *MpcService) Start() error {
 	}
 
 	for index, address := range config.IPAddress {
-
 		if index == 0 {
 			//向instance数据库插入一条新数据
 			instance := models.Instance{
@@ -60,7 +59,9 @@ func (ms *MpcService) Start() error {
 			ms.log.Error("failed to insert data into Client")
 			return err
 		}
+	}
 
+	for index, address := range config.IPAddress {
 		notification := models.FormNotification{}
 		if index == 0 { //第一个
 			notification.InstanceId = instance_id
@@ -163,12 +164,12 @@ func (ms *MpcService) ReceiveCommitment(clientIp string, commitment models.FormC
 		noise := rand.Int63()
 		result := models.FormResult{
 			InstanceId:     commitment.InstanceId,
-			FromSequenceId: 0,     //本机的SequenceId
+			FromSequenceId: -1,    //本机的SequenceId
 			Data:           noise, //本机计算出来的结果
 		}
 		err := models.PostResult(instance.FirstIp, result) // Post 给第一家
 		if err != nil {
-			ms.log.Error("failed to post noise to first party")
+			ms.log.Error("failed to post noise to the first party")
 			return err
 		}
 	}
@@ -229,7 +230,7 @@ func isReady(instance *models.Instance, clients []models.Client) bool {
 	}
 	for _, client := range clients {
 		// 有一家拒绝了请求
-		if client.Status == "REFUSED" {
+		if client.Status != "ACCEPTED" {
 			return false
 		}
 	}

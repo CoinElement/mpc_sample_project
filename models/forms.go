@@ -39,7 +39,7 @@ func PostNotification(ip string, notification FormNotification) error {
 	defer resp.Body.Close()
 
 	content, err := ioutil.ReadAll(resp.Body)
-	fmt.Print(content)
+	fmt.Println(content)
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func PostCommitment(ip string, commitment FormCommitment) error {
 	defer resp.Body.Close()
 
 	content, err := ioutil.ReadAll(resp.Body)
-	fmt.Print(content)
+	fmt.Println(content)
 	if err != nil {
 		return err
 	}
@@ -73,7 +73,7 @@ func PostResult(ip string, result FormResult) error {
 	defer resp.Body.Close()
 
 	content, err := ioutil.ReadAll(resp.Body)
-	fmt.Print(content)
+	fmt.Println(content)
 	if err != nil {
 		return err
 	}

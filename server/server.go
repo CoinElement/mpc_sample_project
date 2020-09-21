@@ -2,13 +2,12 @@ package server
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"mpc_sample_project/controllers"
 	"mpc_sample_project/models"
 	"mpc_sample_project/services"
 	"net/http"
 	"os"
-
-	"github.com/gin-gonic/gin"
 
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
