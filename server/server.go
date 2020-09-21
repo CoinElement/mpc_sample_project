@@ -2,12 +2,13 @@ package server
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"mpc_sample_project/controllers"
 	"mpc_sample_project/models"
 	"mpc_sample_project/services"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
@@ -64,7 +65,7 @@ func CreateServer() *http.Server {
 	r.POST("/start", mpcController.HandleStart)
 	r.GET("/ping", mpcController.HandlePing)
 	r.POST("/commit", mpcController.HandleCommitment)         // 接收commitment
-	r.POST("/result", mpcController.HandleCommitment)         // 接收上一家的 result 或 party_k 的 noise
+	r.POST("/result", mpcController.HandleResult)             // 接收上一家的 result 或 party_k 的 noise
 	r.POST("/notification", mpcController.HandleNotification) // 接收参与计算的请求
 
 	addr := fmt.Sprintf("%s:%s", "0.0.0.0", ADDR_PORT)

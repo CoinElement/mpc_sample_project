@@ -151,7 +151,7 @@ func (ms *MpcService) ReceiveCommitment(clientIp string, commitment models.FormC
 	clients, err := ms.db.GetClientsByInstanceId(commitment.InstanceId)
 	if err != nil {
 		ms.log.Error("failed to get clients by instance id")
-		return nil
+		return err
 	}
 	// 当所有的 party_i 都发送了 Commitment 之后将 noise 发给第一家 (POST firstParty/result)
 	if isReady(instance, clients) { // 调用方法判断是否应该开始计算

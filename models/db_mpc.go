@@ -19,7 +19,7 @@ func (db DB) CreateMpcs(mpc Mpc) error {
 
 func (db DB) GetMpcInfoByInstanceId(instanceId string) (*Mpc, error) {
 	var found Mpc
-	err := db.DB.Where(&Mpc{InstanceId: instanceId}).First(&found).Error
+	err := db.DB.Where(`"instance_id" = ?`, instanceId).First(&found).Error
 	if err != nil {
 		return nil, err
 	}
@@ -27,5 +27,6 @@ func (db DB) GetMpcInfoByInstanceId(instanceId string) (*Mpc, error) {
 }
 
 func (db DB) SetMpcStatus(instanceId, status string) error {
-	return db.DB.Where(&Mpc{InstanceId: instanceId}).Updates(&Mpc{Status: status}).Error
+	mpc := Mpc{}
+	return db.DB.Model(&mpc).Where(`"instance_id" = ?`, instanceId).Updates(Mpc{Status: status}).Error
 }
