@@ -14,19 +14,21 @@ type Instance struct {
 }
 
 func (db *DB) CreateInstances(instance Instance) error {
-	return db.DB.Create(instance).Error
+	return db.DB.Create(&instance).Error
 }
 
 func (db *DB) SetFinalResult(instanceId string, finalResult int64) error {
-	return db.DB.Where(Instance{InstanceId: instanceId}).Updates(Instance{FinalResult: finalResult, Status: "FINISHED"}).Error
+	instance := Instance{}
+	return db.DB.Model(&instance).Where(`"instance_id" = ?`, instanceId).Updates(Instance{FinalResult: finalResult, Status: "FINISHED"}).Error
 }
 
 func (db *DB) SetInstanceStatus(instanceId, status string) error {
-	return db.DB.Where(Instance{InstanceId: instanceId}).Updates(Instance{Status: status}).Error
+	instance := Instance{}
+	return db.DB.Model(&instance).Where(`"instance_id" = ?`, instanceId).Updates(Instance{Status: status}).Error
 }
 
 func (db *DB) GetInstanceById(instanceId string) (*Instance, error) {
 	var instance Instance
-	err := db.DB.Where(&Instance{InstanceId: instanceId}).First(&instance).Error
+	err := db.DB.Where(`"instance_id" = ?`, instanceId).First(&instance).Error
 	return &instance, err
 }

@@ -31,7 +31,7 @@ type FormResult struct {
 
 func PostNotification(ip string, notification FormNotification) error {
 	bytesData, _ := json.Marshal(notification)
-	resp, err := http.Post(ip+"/notification", "application/json;charset=utf-8", bytes.NewBuffer([]byte(bytesData)))
+	resp, err := http.Post("http://"+ip+"/notification", "application/json;charset=utf-8", bytes.NewBuffer([]byte(bytesData)))
 	if err != nil {
 		return err
 	}

@@ -10,7 +10,7 @@ type Client struct {
 }
 
 func (db DB) CreateClients(client Client) error {
-	return db.DB.Create(client).Error
+	return db.DB.Create(&client).Error
 }
 
 func (db DB) GetUncommittedClients(instanceId string) ([]Client, error) {
