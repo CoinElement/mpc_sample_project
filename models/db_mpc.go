@@ -2,9 +2,9 @@ package models
 
 // 参与计算的信息 R/W
 type Mpc struct {
-	ID             uint64
-	InstanceId     string `gorm:"primary_key"`
-	SequenceId     int    `gorm:"primary_key;autoIncrement:false"`
+	ID             uint64 `gorm:"primary_key"`
+	InstanceId     string
+	SequenceId     int
 	PrevAddress    string
 	NextAddress    string
 	ReceivedData   string
@@ -14,7 +14,7 @@ type Mpc struct {
 }
 
 func (db DB) CreateMpcs(mpc Mpc) error {
-	return db.DB.Create(mpc).Error
+	return db.DB.Create(&mpc).Error
 }
 
 func (db DB) GetMpcInfoByInstanceId(instanceId string) (*Mpc, error) {

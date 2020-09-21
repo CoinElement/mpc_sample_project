@@ -4,8 +4,8 @@ import "time"
 
 // 每轮计算 R/W
 type Instance struct {
-	ID          uint64
-	InstanceId  string `gorm:"primary_key"`
+	ID          uint64 `gorm:"primary_key"`
+	InstanceId  string
 	FirstIp     string
 	FinalResult int64
 	Function    string

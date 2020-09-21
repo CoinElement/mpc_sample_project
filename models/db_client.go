@@ -32,6 +32,12 @@ func (db DB) GetClientsByInstanceId(instanceId string) ([]Client, error) {
 }
 
 func (db DB) SetClientStatusByCommitment(commitment FormCommitment) (bool, error) {
+	client := Client{}
+
+	if err := db.DB.Where(`"instance_id" = ? AND "sequence_id" = ?`, commitment.InstanceId, commitment.SequenceId).First(&client).Error; err != nil {
+		return false, err
+	}
+
 	var str string
 	need_continue := true
 	if commitment.Ready {
@@ -40,5 +46,6 @@ func (db DB) SetClientStatusByCommitment(commitment FormCommitment) (bool, error
 		str = "REFUSED"
 		need_continue = false
 	}
-	return need_continue, db.DB.Where(Client{InstanceId: commitment.InstanceId, SequenceId: commitment.SequenceId}).Update("status", str).Error
+	client.Status = str
+	return need_continue, db.DB.Model(&client).Updates(client).Error
 }

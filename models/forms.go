@@ -48,7 +48,7 @@ func PostNotification(ip string, notification FormNotification) error {
 
 func PostCommitment(ip string, commitment FormCommitment) error {
 	bytesData, _ := json.Marshal(commitment)
-	resp, err := http.Post(ip+"/commit", "application/json;charset=utf-8", bytes.NewBuffer([]byte(bytesData)))
+	resp, err := http.Post("http://"+ip+":8080/commit", "application/json;charset=utf-8", bytes.NewBuffer([]byte(bytesData)))
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func PostCommitment(ip string, commitment FormCommitment) error {
 
 func PostResult(ip string, result FormResult) error {
 	bytesData, _ := json.Marshal(result)
-	resp, err := http.Post(ip+"/result", "application/json;charset=utf-8", bytes.NewBuffer([]byte(bytesData)))
+	resp, err := http.Post("http://"+ip+":8080/result", "application/json;charset=utf-8", bytes.NewBuffer([]byte(bytesData)))
 	if err != nil {
 		return err
 	}
