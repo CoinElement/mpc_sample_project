@@ -33,17 +33,9 @@ func (ms *MpcService) Start() error {
 	}
 	var clients []models.Client
 	var firstIp string
-	mpc := models.Mpc{
-		InstanceId:  instance_id,
-		NextAddress: "NULL",
-		Coefficient: 10,
-		Status:      "PENDING",
-	}
 
 	for index, address := range config.IPAddress {
 
-		mpc.SequenceId = index + 1
-		mpc.PrevAddress = address
 		if index == 0 {
 			firstIp = address
 		}
@@ -97,11 +89,6 @@ func (ms *MpcService) Start() error {
 	}
 	if err := ms.db.CreateInstances(instance); err != nil {
 		ms.log.Error("failed to insert new information into instance")
-		return err
-	}
-	//向mpc数据库插入一条新数据
-	if err := ms.db.CreateMpcs(mpc); err != nil {
-		ms.log.Error("failed to insert new information into mpc")
 		return err
 	}
 

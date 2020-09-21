@@ -4,13 +4,14 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "LaunchGo",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "remotePath": "",
-            "program": "${fileDirname}",
+            "program": "${workspaceRoot}\\main.go",
             "env": {
                 "GOPATH": "D:/MyData/codes/GoPath",
                 "GOROOT": "C:/Go"

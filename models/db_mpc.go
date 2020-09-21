@@ -10,7 +10,7 @@ type Mpc struct {
 	ReceivedData   string
 	CalculatedData string
 	Coefficient    int64
-	Status         string //PENDING | FINISHED
+	Status         string //PENDING | CALCULATING | FINISHED
 }
 
 func (db DB) CreateMpcs(mpc Mpc) error {

@@ -1,0 +1,51 @@
+{
+    "editor.wordWrap": "on",
+    "editor.minimap.renderCharacters": false,
+    "editor.minimap.enabled": false,
+    "terminal.external.osxExec": "iTerm.app",
+    //"go.useLanguageServer": true,
+    "go.docsTool": "gogetdoc",
+    "go.testFlags": ["-v","-count=1"],
+    "go.buildTags": "",
+    "go.buildOnSave": "package",
+    "go.buildFlags": ["-o","D:\\MyData\\codes\\Golang\\mpc_sample_project\\bin"],
+    "go.lintFlags": ["-min_confidence=.8","--disable=all", "--enable=errcheck"],//关闭lint警告
+    "go.vetFlags": [],
+    "go.vetOnSave": "off",//关闭lint警告
+    "go.coverOnSave": false,
+    "go.useCodeSnippetsOnFunctionSuggest": false,
+    "go.formatTool": "goreturns",
+    "go.gocodeAutoBuild": false,
+    "go.goroot": "C:\\Go",
+    "go.gopath": "D:\\MyData\\codes\\GoPath",
+    "go.autocompleteUnimportedPackages": true,
+    "go.formatOnSave": true,
+    "window.zoomLevel": 0,
+    "debug.console.fontSize": 16,
+    "debug.console.lineHeight": 30,
+    /*"[javascript]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },*/
+    "go.delveConfig": {
+
+
+        "dlvLoadConfig": {
+            "followPointers": true,
+            "maxVariableRecurse": 1,
+            "maxStringLen": 64,
+            "maxArrayValues": 64,
+            "maxStructFields": -1
+        },
+        "apiVersion": 2,
+        "showGlobalVariables": true
+    },
+    "go.enableCodeLens": {
+
+        "references": false,
+        "runtest": true
+    },
+    "editor.codeActionsOnSave": null,
+}
