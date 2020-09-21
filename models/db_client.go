@@ -9,8 +9,8 @@ type Client struct {
 	Status     string // INVITED | ACCEPTED| REFUSED
 }
 
-func (db DB) CreateClients(clients []Client) error {
-	return db.DB.Create(clients).Error
+func (db DB) CreateClients(client Client) error {
+	return db.DB.Create(client).Error
 }
 
 func (db DB) GetUncommittedClients(instanceId string) ([]Client, error) {

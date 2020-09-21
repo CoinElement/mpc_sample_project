@@ -31,21 +31,36 @@ func (ms *MpcService) Start() error {
 		ms.log.Error("failed to get config when start")
 		return err
 	}
-	var clients []models.Client
-	var firstIp string
 
 	for index, address := range config.IPAddress {
 
 		if index == 0 {
-			firstIp = address
+			//向instance数据库插入一条新数据
+			instance := models.Instance{
+				InstanceId: instance_id,
+				FirstIp:    address,
+				Function:   "prevResult+coefficient*data",
+				Status:     "PENDING",
+				StartTime:  time.Now(),
+			}
+			if err := ms.db.CreateInstances(instance); err != nil {
+				ms.log.Error("failed to insert new information into instance")
+				return err
+			}
 		}
 		//向每个 IP 发送 Notification
-		clients = append(clients, models.Client{
+		client := models.Client{
 			InstanceId: instance_id,
 			SequenceId: index,
 			IpAddress:  address,
 			Status:     "INVITED",
-		})
+		}
+		// 插入到数据库client
+		if err := ms.db.CreateClients(client); err != nil {
+			ms.log.Error("failed to insert data into Client")
+			return err
+		}
+
 		notification := models.FormNotification{}
 		if index == 0 { //第一个
 			notification.InstanceId = instance_id
@@ -73,23 +88,6 @@ func (ms *MpcService) Start() error {
 			ms.log.Error("failed to post notification")
 			return err
 		}
-	}
-	// 保存到数据库client
-	if err := ms.db.CreateClients(clients); err != nil {
-		ms.log.Error("failed to create database of Clients")
-		return err
-	}
-	//向instance数据库插入一条新数据
-	instance := models.Instance{
-		InstanceId: instance_id,
-		FirstIp:    firstIp,
-		Function:   "prevResult+coefficient*data",
-		Status:     "PENDING",
-		StartTime:  time.Now(),
-	}
-	if err := ms.db.CreateInstances(instance); err != nil {
-		ms.log.Error("failed to insert new information into instance")
-		return err
 	}
 
 	return nil
